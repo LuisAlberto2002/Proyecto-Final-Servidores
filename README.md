@@ -1,12 +1,16 @@
-Proyecto en equipo
-Materia: Tecnologias de desarrollo en el servidor
+# Proyecto en Equipo  
+## Materia: Tecnologías de Desarrollo en el Servidor  
 
-Objetivo: Nuestro proyecto busca agilizar el trabajo administrativo de un taller automotriz. Permitiendoles llevar un registro digital de sus operaciones, proveedores, clientes, servicios, etc. Ademas de automatizar la comunicacion con los usuarios haciendo uso de un correo electronico.
+### Objetivo  
+Nuestro proyecto busca **agilizar el trabajo administrativo de un taller automotriz**, permitiéndoles llevar un **registro digital de sus operaciones, proveedores, clientes, servicios, etc.**  
+Además, el sistema **automatiza la comunicación con los usuarios mediante el envío de correos electrónicos**, optimizando así la gestión interna del taller.
 
-Ejecucion
+---
 
-Una vez descargado el repositorio hacer lo siguiente,
+### Ejecución del Proyecto  
 
-1- Ejecutar el comando docker compose build
-2- Una vez completado el proceso ejecutar el comando docker compose up
-3- acceder a la direccion localhost:8500
+1. Clonar o descargar el repositorio.  
+2. Abrir una terminal en la carpeta del proyecto.  
+3. Ejecutar el siguiente comando para construir los contenedores:
+   ```bash
+   docker compose build
