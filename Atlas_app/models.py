@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Clients(models.Model):
     name = models.CharField(max_length=30,default='test')
     phone = models.CharField(max_length=15,default='00 00 00 00 00')
@@ -20,13 +18,13 @@ class Cars(models.Model):
     def __str__(self):
         return self.matricula
 
+
 class Servicios(models.Model):
     name = models.CharField(max_length=30)
     Description = models.CharField(max_length=60)
     costo = models.FloatField(default=0.0)
     def __str__(self):
         return self.name
-
 
 
 class Service_orders(models.Model):
@@ -39,6 +37,7 @@ class Service_orders(models.Model):
 
     def __str__(self):
         return self.code
+
 
 class Factures(models.Model):
     client = models.ForeignKey(Clients,on_delete=models.CASCADE)

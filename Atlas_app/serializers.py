@@ -5,28 +5,36 @@ from .models import Clients, Cars, Servicios, Service_orders, Factures
 class ClientsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clients
-        fields = '__all__'
+        fields = ['id', 'name', 'phone', 'email']
+        read_only_fields = ['id']
 
 
 class CarsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cars
-        fields = '__all__'
+        fields = ['id', 'client', 'model', 'matricula', 'color', 'picture']
+        read_only_fields = ['id']
 
 
 class ServiciosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Servicios
-        fields = '__all__'
+        fields = ['id', 'name', 'Description', 'costo']
+        read_only_fields = ['id']
 
 
 class ServiceOrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_orders
-        fields = '__all__'
+        fields = [
+            'id', 'Client', 'code', 'car', 'servicio',
+            'emision_date', 'delivery_Date'
+        ]
+        read_only_fields = ['id']
 
 
 class FacturesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factures
-        fields = '__all__'
+        fields = ['id', 'client', 'servicio', 'service_order', 'monto', 'fecha']
+        read_only_fields = ['id', 'fecha']
