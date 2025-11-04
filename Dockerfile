@@ -7,6 +7,6 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
-
 EXPOSE 8500
+
+CMD ["sh", "-c", "python manage.py migrate"]
