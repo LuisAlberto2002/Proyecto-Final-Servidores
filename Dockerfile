@@ -5,6 +5,6 @@ COPY . /app/
 
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-RUN python manage.py makemigrations
+EXPOSE 8500
 
-RUN python manage.py migrate
+CMD ["sh", "-c", "python manage.py migrate"]
