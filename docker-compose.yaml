@@ -1,24 +1,29 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8500
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8500"
     volumes:
       - .:/app
     ports:
       - "8500:8500"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=mydatabase
       - POSTGRES_USER=user 
       - POSTGRES_PASSWORD=password
       - POSTGRES_PORT= 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
 volumes:
   postgres_data:
 
-  

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-i(k1lodc(w@3n!z93p)4m#y8x-vrd%iafc=!udh@c5%a$w03^8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'] # esto es para desarrollo
 
 
 # Application definition
@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'Atlas_app',
     'rest_framework',
+    'drf_spectacular',
+    'Atlas_app',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
+        'rest_framework.renderers.BrowsableAPIRenderer',   
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    # Genera schema OpenAPI
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Opciones de documentación
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ATLAS Taller API',
+    'DESCRIPTION': 'API para gestión de clientes, autos, servicios, órdenes y facturas del taller.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,  # el endpoint /api/schema/ se expone aparte
+    'COMPONENT_SPLIT_REQUEST': True,
 }
