@@ -47,7 +47,7 @@ Recurso	            Método	                           Descripción
 /api/invoices/	      GET / POST / PUT / DELETE	         Facturas de clientes
 
 ## Documentación Swagger
-UI: http://localhost:8500/api/docs/
-ReDoc: http://localhost:8500/api/redoc/
-Schema JSON: http://localhost:8500/api/schema/
+- UI: http://localhost:8500/api/docs/
+- ReDoc: http://localhost:8500/api/redoc/
+- Schema JSON: http://localhost:8500/api/schema/
 
