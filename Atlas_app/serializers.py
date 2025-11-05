@@ -12,7 +12,7 @@ class ClientsSerializer(serializers.ModelSerializer):
 class CarsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cars
-        fields = ['id', 'client', 'model', 'matricula', 'color', 'picture']
+        fields = ['id', 'client', 'model', 'matricula', 'color']
         read_only_fields = ['id']
 
 
