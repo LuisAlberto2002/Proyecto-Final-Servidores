@@ -83,7 +83,7 @@ class FacturesViewSet(viewsets.ModelViewSet):
 #Devolver la informacion de la factura a partir de su code.
 
 def CheckFactura(request,code):
-    facturas = Factures.objects.get(code = code)g
+    facturas = Factures.objects.get(code = code)
 
 #Crear la factura en base a un formulario
 
