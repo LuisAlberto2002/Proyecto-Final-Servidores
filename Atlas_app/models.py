@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Clients(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=30,default='test')
     phone = models.CharField(max_length=15,default='00 00 00 00 00')
     email = models.EmailField(blank=False,null=False)
@@ -10,11 +12,12 @@ class Clients(models.Model):
 
 
 class Cars(models.Model):
-    client = models.ForeignKey(Clients,on_delete=models.CASCADE)
+    client = models.ForeignKey(Clients, on_delete=models.CASCADE)
     model = models.CharField(max_length=30, default="Unknown")
     matricula = models.CharField(max_length=7, default="00-000-00")
-    color = models.CharField(max_length=30,default="None")
-    #picture = models.ImageField(upload_to='images/', blank=True, null=True)
+    color = models.CharField(max_length=30, default="None")
+    picture = models.ImageField(upload_to="images", blank=True, null=True)
+    
     def __str__(self):
         return self.matricula
 

@@ -16,12 +16,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from Atlas_app import views as atlas_views
+from Atlas_app.views import (
+    ClientsViewSet,
+    CarsViewSet,
+    ServiciosViewSet,
+    ServiceOrdersViewSet,
+    FacturesViewSet,
+)
 from drf_spectacular.views import (
     SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 )
 
+router = DefaultRouter()
+router.register(r'clients', ClientsViewSet)
+router.register(r'cars', CarsViewSet)
+router.register(r'servicios', ServiciosViewSet)
+router.register(r'service-orders', ServiceOrdersViewSet)
+router.register(r'factures', FacturesViewSet)
 
 urlpatterns = [
+
+    path("api/", include(router.urls)),
+    path("cars/", atlas_views.cars_list, name="cars_list"),
+    path("cars/create/", atlas_views.cars_create, name="cars_create"),
+    path("cars/<int:pk>/edit/", atlas_views.cars_edit, name="cars_edit"),
+    path("cars/<int:pk>/delete/", atlas_views.cars_delete, name="cars_delete"),
+
     path('admin/', admin.site.urls),
     path('api/', include('Atlas_app.urls')),
 
