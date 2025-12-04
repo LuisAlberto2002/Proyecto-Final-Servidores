@@ -40,8 +40,9 @@ class Service_orders(models.Model):
 
 
 class Factures(models.Model):
+    sn = models.CharField(max_length=9,default='0000-0000')
     service_order= models.ForeignKey(Service_orders,on_delete=models.CASCADE)
-    monto = models.FloatField(default=0.0)
+    #monto = models.FloatField(default=0.0)
     fecha = models.DateField(auto_now_add=True)
     def __srt__(self):
-        return self.code
+        return self.sn
