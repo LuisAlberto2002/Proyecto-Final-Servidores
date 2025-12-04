@@ -14,7 +14,7 @@ class Cars(models.Model):
     model = models.CharField(max_length=30, default="Unknown")
     matricula = models.CharField(max_length=7, default="00-000-00")
     color = models.CharField(max_length=30,default="None")
-    picture = models.ImageField(upload_to='images/', blank=True, null=True)
+    #picture = models.ImageField(upload_to='images/', blank=True, null=True)
     def __str__(self):
         return self.matricula
 
