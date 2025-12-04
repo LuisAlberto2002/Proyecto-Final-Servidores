@@ -84,11 +84,13 @@ class FacturesViewSet(viewsets.ModelViewSet):
 
 def CheckFactura(request,code):
     facturas = Factures.objects.get(code = code)
+    return render(request,'facturas/factura.html',{'facturas':facturas})
 
 #Crear la factura en base a un formulario
 
 def CreateFactura(request):
-    facturas = Factures.objects.create()
+    orders = Service_orders.objects.all()
+    return render(request,'facturas/factura.html',{'ordenes':orders})
     
 
 
@@ -96,3 +98,4 @@ def CreateFactura(request):
     
 def DelFactura(request):
     factura = Factures.objects.delete(code = request.code)
+    return render(request,'facturas/factura.html')

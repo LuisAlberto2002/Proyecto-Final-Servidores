@@ -12,5 +12,8 @@ router.register(r'factures', views.FacturesViewSet)
 # The API URLs are now determined automatically by the router
 urlpatterns = [
     path('', include(router.urls)),
+    path('facturaC/',views.CreateFactura, name='Facturas_create'),
+    path('facturasD/',views.DelFactura,name='Delete_factura'),
+    path("facturasS/",views.CheckFactura,name='InfoFactura'),
 
 ]
