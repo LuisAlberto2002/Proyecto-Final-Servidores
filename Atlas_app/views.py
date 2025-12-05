@@ -13,7 +13,8 @@ from django.contrib import messages
 from .forms import FacturesForm
 from django.http import JsonResponse
 import json
-
+from django.conf import settings
+from django.core.mail import send_mail
 
 from .models import Clients, Cars, Servicios, Service_orders, Factures
 from .serializers import (
@@ -150,10 +151,32 @@ def servicio_create(request):
             return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
         
         Servicios.objects.create(name=name, Description=descripcion, costo=costo)
-        messages.success(request, f'Servicio "{name}" creado exitosamente.')
+        # Preparar contenido del email
+        contenido_email = f"""El servicio ha sido creado exitosamente:
+
+📋 Nombre: {name}
+💰 Costo: ${costo}
+📝 Descripción: {descripcion if descripcion else 'Sin descripción'}
+👤 Creado por: {request.user.username}
+📅 Fecha: {__import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')}
+
+El nuevo servicio ya está disponible en el sistema."""
+        
+        email_enviado = enviar_email(
+            usuario=request.user,
+            asunto=f'✅ Nuevo Servicio Creado: {name}',
+            contenido=contenido_email
+        )
+        
+        if email_enviado:
+            messages.success(request, f'✅ Servicio "{name}" creado exitosamente. Email de confirmación enviado.')
+        else:
+            messages.warning(request, f'⚠️ Servicio "{name}" creado, pero no se pudo enviar el email de confirmación.')
+        
         return redirect('servicios_list')
     
     return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+
 
 
 @login_required
@@ -204,3 +227,28 @@ def servicio_edit(request, pk):
     
     context = {'servicio': servicio, 'action': 'Editar'}
     return render(request, 'servicios/servicio_form.html', context)
+
+
+def enviar_email(usuario, asunto, contenido):
+    """Función para enviar emails"""
+    try:
+        mensaje = f"""
+        Hola {usuario.first_name or usuario.username},
+
+        {contenido}
+        
+        ---
+        ATLAS - Correo Automático, por favor no respondas a este mensaje.
+        """
+        
+        send_mail(
+            subject=asunto,
+            message=mensaje,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[usuario.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Error al enviar email: {str(e)}")
+        return False

@@ -53,7 +53,12 @@ Recurso	            Método	                           Descripción
 - ReDoc: http://localhost:8500/api/redoc/
 - Schema JSON: http://localhost:8500/api/schema/
 
+## Requisitos para correos
 
+Agregar un .env con:
+
+EMAIL_HOST_USER   
+EMAIL_HOST_PASSWORD
 
 ## Historias de Usuario (Servicios - Luis Pelayo) 
 
@@ -77,3 +82,6 @@ Como superusuario, en /servicios, en cada tarjeta de servicio aparecera un boton
 
 ![alt text](imagenes/image-4.png)
 ![alt text](imagenes/image-5.png)
+
+
+
