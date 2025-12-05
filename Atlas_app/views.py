@@ -3,14 +3,10 @@ from rest_framework import viewsets, permissions, serializers
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .forms import FacturesForm
 from django.http import JsonResponse
 import json
 
@@ -24,6 +20,7 @@ from drf_spectacular.utils import (
 from django.conf import settings
 from django.core.mail import send_mail
 
+from .forms import FacturesForm, CarsForm
 from .models import Clients, Cars, Servicios, Service_orders, Factures
 from .serializers import (
     ClientsSerializer, CarsSerializer, ServiciosSerializer,
@@ -313,6 +310,94 @@ def servicio_edit(request, pk):
     
     context = {'servicio': servicio, 'action': 'Editar'}
     return render(request, 'servicios/servicio_form.html', context)
+
+
+def _get_client_for_user(user):
+    """Devuelve el cliente asociado al usuario o None."""
+    try:
+        return Clients.objects.get(user=user)
+    except Clients.DoesNotExist:
+        return None
+    
+
+@login_required
+def cars_list(request):
+    client = _get_client_for_user(request.user)
+    if not client:
+        messages.error(request, "No tienes un cliente asociado.")
+        cars = Cars.objects.none()
+    else:
+        cars = Cars.objects.filter(client=client)
+
+    return render(request, "cars/cars_list.html", {"cars": cars})
+
+
+@login_required
+def cars_create(request):
+    client = _get_client_for_user(request.user)
+    if not client:
+        messages.error(request, "No tienes un cliente asociado.")
+        return redirect("cars_list")
+
+    if request.method == "POST":
+        form = CarsForm(request.POST, request.FILES)
+        if form.is_valid():
+            car = form.save(commit=False)
+            car.client = client          # cliente_id según tu ER
+            car.save()
+            messages.success(request, "Vehículo creado correctamente.")
+            return redirect("cars_list")
+    else:
+        form = CarsForm()
+
+    return render(request, "cars/cars_form.html", {"form": form, "action": "Crear"})
+
+
+@login_required
+def cars_edit(request, pk):
+    client = _get_client_for_user(request.user)
+    if not client:
+        messages.error(request, "No tienes un cliente asociado.")
+        return redirect("cars_list")
+
+    car = get_object_or_404(Cars, pk=pk)
+
+    # Garantizar que el auto pertenece al cliente logueado
+    if car.client != client:
+        messages.error(request, "No puedes editar este vehículo.")
+        return redirect("cars_list")
+
+    if request.method == "POST":
+        form = CarsForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Vehículo actualizado correctamente.")
+            return redirect("cars_list")
+    else:
+        form = CarsForm(instance=car)
+
+    return render(request, "cars/cars_form.html", {"form": form, "action": "Editar"})
+
+
+@login_required
+def cars_delete(request, pk):
+    client = _get_client_for_user(request.user)
+    if not client:
+        messages.error(request, "No tienes un cliente asociado.")
+        return redirect("cars_list")
+
+    car = get_object_or_404(Cars, pk=pk)
+
+    if car.client != client:
+        messages.error(request, "No puedes eliminar este vehículo.")
+        return redirect("cars_list")
+
+    if request.method == "POST":
+        car.delete()
+        messages.success(request, "Vehículo eliminado correctamente.")
+        return redirect("cars_list")
+
+    return render(request, "cars/cars_confirm_delete.html", {"car": car})
 
 
 def enviar_email(usuario, asunto, contenido):
