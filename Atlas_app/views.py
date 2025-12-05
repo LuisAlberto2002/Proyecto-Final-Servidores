@@ -21,6 +21,8 @@ from drf_spectacular.utils import (
     OpenApiParameter, OpenApiResponse
 )
 
+from django.conf import settings
+from django.core.mail import send_mail
 
 from .models import Clients, Cars, Servicios, Service_orders, Factures
 from .serializers import (
@@ -132,8 +134,8 @@ class CarsViewSet(viewsets.ModelViewSet):
     ordering = ['model']
 
 
-class ServiciosViewSet(viewsets.ReadOnlyModelViewSet):
-    """Servicios (solo lectura)"""
+class ServiciosViewSet(viewsets.ModelViewSet):
+    """CRUD para Servicios"""
     queryset = Servicios.objects.all()
     serializer_class = ServiciosSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -181,3 +183,158 @@ def CreateFactura(request):
 
 def DelFactura(request):
     factura = Factures.objects.delete(code = request.code)
+
+def servicios_list(request):
+    """SV02 - Consulta de servicios"""
+    servicios = Servicios.objects.all()
+    search = request.GET.get('search', '')
+    
+    if search:
+        servicios = servicios.filter(name__icontains=search)
+    
+    context = {
+        'servicios': servicios,
+        'search': search,
+        'is_admin': request.user.is_superuser
+    }
+    return render(request, 'servicios/servicios_list.html', context)
+
+
+@login_required
+def servicio_create(request):
+    """SV01 - Alta de servicio (solo Administrador)"""
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('servicios_list')
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        descripcion = request.POST.get('descripcion', '').strip()
+        costo = request.POST.get('costo', '').strip()
+        
+        # Validación
+        if not name:
+            messages.error(request, 'El nombre del servicio es obligatorio.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+        
+        if not descripcion:
+            descripcion = ''
+
+        if not costo:
+            messages.error(request, 'El costo es obligatorio.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+        
+        try:
+            costo = float(costo)
+            if costo < 0:
+                raise ValueError("El costo debe ser positivo")
+        except ValueError:
+            messages.error(request, 'El costo debe ser un número válido y positivo.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+        
+        if Servicios.objects.filter(name=name).exists():
+            messages.error(request, 'Ya existe un servicio con ese nombre.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+        
+        Servicios.objects.create(name=name, Description=descripcion, costo=costo)
+        # Preparar contenido del email
+        contenido_email = f"""El servicio ha sido creado exitosamente:
+
+📋 Nombre: {name}
+💰 Costo: ${costo}
+📝 Descripción: {descripcion if descripcion else 'Sin descripción'}
+👤 Creado por: {request.user.username}
+📅 Fecha: {__import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')}
+
+El nuevo servicio ya está disponible en el sistema."""
+        
+        email_enviado = enviar_email(
+            usuario=request.user,
+            asunto=f'✅ Nuevo Servicio Creado: {name}',
+            contenido=contenido_email
+        )
+        
+        if email_enviado:
+            messages.success(request, f'✅ Servicio "{name}" creado exitosamente. Email de confirmación enviado.')
+        else:
+            messages.warning(request, f'⚠️ Servicio "{name}" creado, pero no se pudo enviar el email de confirmación.')
+        
+        return redirect('servicios_list')
+    
+    return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
+
+
+
+@login_required
+def servicio_edit(request, pk):
+    """SV03 - Edición de servicio (solo Administrador)"""
+    servicio = get_object_or_404(Servicios, pk=pk)
+    
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('servicios_list')
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        descripcion = request.POST.get('descripcion', '').strip()
+        costo = request.POST.get('costo', '').strip()
+        
+        # Validación
+        if not name:
+            messages.error(request, 'El nombre del servicio es obligatorio.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Editar', 'servicio': servicio})
+        
+        if not descripcion:
+            descripcion = ''
+
+        if not costo:
+            messages.error(request, 'El costo es obligatorio.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Editar', 'servicio': servicio})
+        
+        try:
+            costo = float(costo)
+            if costo < 0:
+                raise ValueError("El costo debe ser positivo")
+        except ValueError:
+            messages.error(request, 'El costo debe ser un número válido y positivo.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Editar', 'servicio': servicio})
+        
+        # Verificar si el nombre está usado por otro servicio
+        if Servicios.objects.filter(name=name).exclude(pk=pk).exists():
+            messages.error(request, 'Ya existe otro servicio con ese nombre.')
+            return render(request, 'servicios/servicio_form.html', {'action': 'Editar', 'servicio': servicio})
+        
+        servicio.name = name
+        servicio.Description = descripcion
+        servicio.costo = costo
+        servicio.save()
+        messages.success(request, f'Servicio "{name}" actualizado exitosamente.')
+        return redirect('servicios_list')
+    
+    context = {'servicio': servicio, 'action': 'Editar'}
+    return render(request, 'servicios/servicio_form.html', context)
+
+
+def enviar_email(usuario, asunto, contenido):
+    """Función para enviar emails"""
+    try:
+        mensaje = f"""
+        Hola {usuario.first_name or usuario.username},
+
+        {contenido}
+        
+        ---
+        ATLAS - Correo Automático, por favor no respondas a este mensaje.
+        """
+        
+        send_mail(
+            subject=asunto,
+            message=mensaje,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[usuario.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Error al enviar email: {str(e)}")
+        return False
