@@ -1,3 +1,4 @@
+
 # ATLAS Taller API
 
 API REST desarrollada con **Django + Django REST Framework**, contenedorizada con **Docker** y documentada con **Swagger (drf-spectacular)**.  
@@ -16,24 +17,25 @@ Además, el sistema **automatiza la comunicación con los usuarios mediante el e
 1. Clonar o descargar el repositorio.  
 2. Abrir una terminal en la carpeta del proyecto.  
 3. Ejecutar el siguiente comando para construir y levantar los contenedores:
-   ```bash
+```sh
    docker compose up --build
-   ```
+```
+
    
 Esto levantará:
    - Web (Django) en http://localhost:8500
    - Base de datos (PostgreSQL) en el puerto 5432
    
 ## Aplicar migraciones
-   ```bash
+```sh
    docker compose exec web python manage.py makemigrations
    docker compose exec web python manage.py migrate
-   ```
+```
 
 ## Superuser:
-   ```bash
+```sh
    docker compose exec web python manage.py createsuperuser
-   ```
+```
 
 Accede luego al panel:
    - http://localhost:8500/admin/
@@ -50,4 +52,36 @@ Recurso	            Método	                           Descripción
 - UI: http://localhost:8500/api/docs/
 - ReDoc: http://localhost:8500/api/redoc/
 - Schema JSON: http://localhost:8500/api/schema/
+
+## Requisitos para correos
+
+Agregar un .env con:
+
+EMAIL_HOST_USER   
+EMAIL_HOST_PASSWORD
+
+## Historias de Usuario (Servicios - Luis Pelayo) 
+
+### 1 - Lista de servicios existente
+Dirigirse a /servicios para visualizar los servicios existentes.
+
+
+![alt text](imagenes/image.png)
+
+### 2 - Crear servicios
+Como superusuario, en /servicios aparecera un boton para crear servicios, con un formulario que solicita nombre, descripcion y costo de servicio. Tambien se puede acceder directamente desde /servicios/crear
+
+
+![alt text](imagenes/image-1.png)
+![alt text](imagenes/image-3.png)
+![alt text](imagenes/image-2.png)
+
+### 3 - Editar servicios
+Como superusuario, en /servicios, en cada tarjeta de servicio aparecera un boton para editar, que redirige a un formulario identico al de creacion de servicio. Tambien se pueden editar mediante /servicios/:id/editar
+
+
+![alt text](imagenes/image-4.png)
+![alt text](imagenes/image-5.png)
+
+
 

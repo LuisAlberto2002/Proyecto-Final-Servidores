@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-3">Eliminar vehículo</h1>
+
+  <div class="alert alert-warning">
+    <p>
+      ¿Seguro que deseas eliminar el vehículo
+      <strong>{{ car.model }}</strong>
+      con matrícula
+      <strong>{{ car.matricula }}</strong>?
+    </p>
+  </div>
+
+  <form method="post" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'cars_list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}
