@@ -131,7 +131,7 @@ def servicio_create(request):
             return render(request, 'servicios/servicio_form.html', {'action': 'Crear'})
         
         if not descripcion:
-            descripcion = '---'
+            descripcion = ''
 
         if not costo:
             messages.error(request, 'El costo es obligatorio.')
@@ -176,7 +176,7 @@ def servicio_edit(request, pk):
             return render(request, 'servicios/servicio_form.html', {'action': 'Editar', 'servicio': servicio})
         
         if not descripcion:
-            descripcion = '---'
+            descripcion = ''
 
         if not costo:
             messages.error(request, 'El costo es obligatorio.')
