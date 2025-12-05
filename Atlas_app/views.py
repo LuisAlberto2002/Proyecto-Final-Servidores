@@ -168,12 +168,29 @@ class FacturesViewSet(viewsets.ModelViewSet):
 
 #Devolver la informacion de la factura a partir de su code.
 
-def CheckFactura(request,code):
-    facturas = Factures.objects.get(code = code)
+def CheckFactura(request):
+    facturas = Factures.objects.all()
+    return render(request,'facturas/facturaS.html',{'facturas':facturas})
+
+def Info_factura(request,sn):
+    factura = Factures.objects.get(sn = sn)
+    return render(request,'facturas/infoF.html',{'factura':factura})
 
 #Crear la factura en base a un formulario
 
 def CreateFactura(request):
+    orders = Service_orders.objects.all()
+    
+    if request.method == 'POST':
+        #order_code = request.POST.get('code')
+        orden = get_object_or_404(Service_orders, code= request.POST.get('code')) 
+        sn = request.POST.get('sn')
+        factura = Factures.objects.create(
+            sn=sn,
+            service_order=orden,
+        )
+        return redirect('/facturas/')
+    return render(request, 'facturas/facturaC.html', {'ordenes': orders})
     facturas = Factures.objects.create()
 
 #Eliminar la factura a partir de su code
@@ -196,6 +213,12 @@ def servicios_list(request):
     }
     return render(request, 'servicios/servicios_list.html', context)
 
+#Eliminar la factura a partir de su sn
+    
+def DelFactura(request,sn):
+    factura = get_object_or_404(Factures,sn=sn)
+    factura.delete()
+    return redirect('/facturas/')
 
 @login_required
 def servicio_create(request):

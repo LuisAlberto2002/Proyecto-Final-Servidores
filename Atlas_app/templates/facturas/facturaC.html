@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Factura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;}
+
+        button:hover {
+            background: #45A049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Registrar Factura</h2>
+
+    <!-- Importante: Django necesita method POST y csrf token -->
+    <form method="POST">
+        {% csrf_token %}
+        <label>SN de la factura:</label>
+        <input type="text" name="sn" required>
+    
+    
+        <label>Orden de servicio:</label>
+        <select name="code" required>
+            {% for orden in ordenes %}
+            <option value="{{ orden.code }}">{{ orden.code }}</option>
+            {% endfor %}
+        </select>
+    
+        <button type="submit">Crear Factura</button>
+    </form>
+
+</div>
+
+</body>
+</html>

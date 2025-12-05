@@ -15,5 +15,9 @@ router.register(r'factures', FacturesViewSet)
 urlpatterns = [
     path('clients/<int:pk>/orders/', ClientsViewSet.as_view({'get': 'orders'})),
     path('', include(router.urls)),
-    
+    path('facturaC/',views.CreateFactura, name='Facturas_template'),
+    path('facturasD/<str:sn>/',views.DelFactura,name='Delete_factura'),
+    path('facturas/',views.CheckFactura,name='Buscar_factura'),
+    path('facturasInfo/<str:sn>/',views.Info_factura,name='Factura_info'),
+
 ]
