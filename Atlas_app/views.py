@@ -154,13 +154,13 @@ def servicio_create(request):
         # Preparar contenido del email
         contenido_email = f"""El servicio ha sido creado exitosamente:
 
-📋 Nombre: {name}
-💰 Costo: ${costo}
-📝 Descripción: {descripcion if descripcion else 'Sin descripción'}
-👤 Creado por: {request.user.username}
-📅 Fecha: {__import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')}
+        📋 Nombre: {name}
+        💰 Costo: ${costo}
+        📝 Descripción: {descripcion if descripcion else 'Sin descripción'}
+        👤 Creado por: {request.user.username}
+        📅 Fecha: {__import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')}
 
-El nuevo servicio ya está disponible en el sistema."""
+    El nuevo servicio ya está disponible en el sistema."""
         
         email_enviado = enviar_email(
             usuario=request.user,
@@ -236,7 +236,7 @@ def enviar_email(usuario, asunto, contenido):
         Hola {usuario.first_name or usuario.username},
 
         {contenido}
-        
+
         ---
         ATLAS - Correo Automático, por favor no respondas a este mensaje.
         """
