@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ action }} Cliente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #004aad; }
+
+        form {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background: #0066ff;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button:hover { background: #004bd1; }
+
+        .btn-cancel {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .error-msg { color: red; font-size: 0.8em; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+    <h1>{{ action }} Cliente</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <label>{{ field.label }}:</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="error-msg">{{ field.errors|striptags }}</div>
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit">{{ action }}</button>
+        <a href="{% url 'clients_list' %}" class="btn-cancel">Cancelar</a>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura {{ factura.sn }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        .container {
+            width: 650px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .box {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .row {
+            margin-bottom: 6px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        a:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Factura SN: {{ factura.sn }}</h2>
+
+    <!-- CLIENTE -->
+    <div class="box">
+        <h3>Cliente</h3>
+        <p class="row"><span class="label">Nombre:</span> {{ factura.service_order.Client.name }}</p>
+        <p class="row"><span class="label">Correo:</span> {{ factura.service_order.Client.email }}</p>
+        <p class="row"><span class="label">Teléfono:</span> {{ factura.service_order.Client.phone }}</p>
+    </div>
+
+    <!-- VEHÍCULO -->
+    <div class="box">
+        <h3>Vehículo</h3>
+        <p class="row"><span class="label">Matrícula:</span> {{ factura.service_order.car.matricula }}</p>
+        <p class="row"><span class="label">Modelo:</span> {{ factura.service_order.car.model }}</p>
+        <p class="row"><span class="label">Color:</span> {{ factura.service_order.car.color }}</p>
+    </div>
+
+    <!-- SERVICIO -->
+    <div class="box">
+        <h3>Servicio</h3>
+        <p class="row"><span class="label">Nombre:</span> {{ factura.service_order.servicio.name }}</p>
+        <p class="row"><span class="label">Descripción:</span> {{ factura.service_order.servicio.Description }}</p>
+        <p class="row"><span class="label">Costo base:</span> ${{ factura.service_order.servicio.costo }}</p>
+    </div>
+
+    <!-- ORDEN DE SERVICIO -->
+    <div class="box">
+        <h3>Orden de Servicio</h3>
+        <p class="row"><span class="label">Código:</span> {{ factura.service_order.code }}</p>
+        <p class="row"><span class="label">Fecha de emisión:</span> {{ factura.service_order.emision_date }}</p>
+        <p class="row"><span class="label">Fecha de entrega:</span> {{ factura.service_order.delivery_Date }}</p>
+    </div>
+
+    <!-- DATOS DE FACTURA -->
+    <div class="box">
+        <h3>Factura</h3>
+        <p class="row"><span class="label">Monto total:</span> ${{ factura.service_order.servicio.costo }}</p>
+        <p class="row"><span class="label">Fecha:</span> {{ factura.fecha }}</p>
+    </div>
+    <div class="box">
+        <a class="delete-btn" href="/facturasD/{{ factura.sn }}/">Eliminar factura</a>
+    </div>
+
+    <a href="/facturas/">Volver al listado</a>
+</div>
+
+</body>
+</html>

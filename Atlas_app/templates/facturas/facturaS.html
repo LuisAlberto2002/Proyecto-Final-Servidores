@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Facturas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f6f6f6;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Estilo del "label" clickable */
+        .factura-card {
+            background: white;
+            padding: 15px;
+            margin: 12px auto;
+            width: 60%;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .factura-card:hover {
+            background: #f0f0f0;
+        }
+
+        .factura-sn {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .factura-date {
+            color: #555;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>Facturas</h1>
+
+    <!-- Buscador -->
+    <div class="search-container">
+        <form action="{% url 'Buscar_factura' %}" method="get">
+            <input type="text" name="sn" class="search-box" placeholder="Buscar por SN">
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+    </div>
+    <div>
+       <a href="{% url 'Facturas_template' %}"><button>Crear factura</button></a> 
+    </div>
+
+    <hr><br>
+
+    <!-- Listado de facturas -->
+    {% for factura in facturas %}
+        <div class="factura-card" onclick="location.href='/facturasInfo/{{ factura.sn }}'">
+            <div class="factura-sn">Factura SN: {{ factura.sn }}</div>
+            <div class="factura-date">Fecha: {{ factura.fecha }}</div>
+        </div>
+    {% empty %}
+        <p style="text-align:center;">No hay facturas registradas.</p>
+    {% endfor %}
+
+</body>
+</html>

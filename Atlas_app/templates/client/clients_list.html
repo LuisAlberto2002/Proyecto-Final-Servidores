@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        h1, h2 {
+            color: #004aad;
+        }
+
+        /* Estilos del Formulario */
+        form {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 300px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 12px;
+            padding: 8px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background: #0066ff;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #004bd1;
+        }
+
+        /* Estilos de la Tabla */
+        #clients-table {
+            width: 90%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #clients-table th, #clients-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        /* Botones de acción */
+        .action-btn {
+            text-decoration: none;
+            cursor: pointer;
+            margin: 2px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            color: black;
+            font-size: 0.9rem;
+            display: inline-block;
+            border: 1px solid #ccc;
+        }
+
+        .edit-btn { background: #ffc107; border-color: #e0a800; }
+        .delete-btn { background: #dc3545; color: white; border-color: #bd2130; }
+        .view-btn { background: #e2e6ea; }
+
+        /* Lista de órdenes inferior */
+        .orders-item {
+            background: white;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            list-style: none;
+            border: 1px solid #ddd;
+            width: 300px;
+        }
+        
+        hr { margin: 30px 0; border: 0; border-top: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h1>Gestión de Clientes</h1>
+
+<section>
+    <h2>Crear Cliente</h2>
+    <form method="POST" action="{% url 'client_create' %}">
+        {% csrf_token %}
+
+        <label>Nombre:</label>
+        <input type="text" name="name" required>
+
+        <label>Teléfono:</label>
+        <input type="text" name="phone" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <button type="submit">Guardar</button>
+    </form>
+</section>
+
+<hr>
+
+<section>
+    <h2>Clientes Registrados</h2>
+
+    <table id="clients-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in clients %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.phone }}</td>
+                <td>{{ c.email }}</td>
+                <td>
+                    <a class="action-btn edit-btn" href="{% url 'client_edit' c.id %}">Editar</a>
+                    <a class="action-btn delete-btn" href="{% url 'client_delete' c.id %}">Eliminar</a>
+                    <a class="action-btn view-btn" href="/api/clients/{{ c.id }}/orders/" target="_blank">Ver Órdenes</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No hay clientes registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<hr>
+
+<section>
+    <h2>Órdenes del Cliente</h2>
+    <div id="orders-section">
+        {% if orders %}
+            <ul style="padding:0;">
+            {% for o in orders %}
+                <li class="orders-item">
+                    Orden #{{ o.id }} – {{ o.description }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Selecciona un cliente arriba (Ver Órdenes) para ver detalles.</p>
+        {% endif %}
+    </div>
+</section>
+
+</body>
+</html>
