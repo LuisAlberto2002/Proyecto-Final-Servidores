@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Gestión de Clientes</h1>
+
+<!-- FORMULARIO CREAR / EDITAR -->
+<section id="form-section">
+    <h2 id="form-title">Crear Cliente</h2>
+
+    <form id="client-form">
+        <input type="hidden" id="client-id">
+
+        <label>Nombre:</label>
+        <input type="text" id="name" required>
+
+        <label>Teléfono:</label>
+        <input type="text" id="phone" required>
+
+        <label>Email:</label>
+        <input type="email" id="email" required>
+
+        <button type="submit" id="submit-btn">Guardar</button>
+        <button type="button" id="cancel-edit" style="display:none;">Cancelar edición</button>
+    </form>
+</section>
+
+<hr>
+
+<!-- LISTA DE CLIENTES -->
+<section>
+    <h2>Clientes Registrados</h2>
+    <table id="clients-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="clients-body"></tbody>
+    </table>
+</section>
+
+<hr>
+
+<!-- ORDENES DEL CLIENTE -->
+<section>
+    <h2>Órdenes del Cliente</h2>
+    <div id="orders-section">
+        <p>Selecciona un cliente para ver sus órdenes.</p>
+        <ul id="orders-list"></ul>
+    </div>
+</section>
+
+<script src="clientes.js"></script>
+</body>
+</html>

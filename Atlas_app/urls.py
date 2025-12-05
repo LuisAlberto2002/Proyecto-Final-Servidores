@@ -1,16 +1,19 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
+from rest_framework import routers
+from .views import (
+    ClientsViewSet, CarsViewSet, ServiciosViewSet,
+    ServiceOrdersViewSet, FacturesViewSet
+)
 
-router = DefaultRouter()
-router.register(r'clients', views.ClientsViewSet)
-router.register(r'cars', views.CarsViewSet)
-router.register(r'servicios', views.ServiciosViewSet)
-router.register(r'service-orders', views.ServiceOrdersViewSet)
-router.register(r'factures', views.FacturesViewSet)
+router = routers.DefaultRouter()
+router.register(r'clients', ClientsViewSet)
+router.register(r'cars', CarsViewSet)
+router.register(r'servicios', ServiciosViewSet)
+router.register(r'service_orders', ServiceOrdersViewSet)
+router.register(r'factures', FacturesViewSet)
 
-# The API URLs are now determined automatically by the router
 urlpatterns = [
+    path('clients/<int:pk>/orders/', ClientsViewSet.as_view({'get': 'orders'})),
     path('', include(router.urls)),
     
 ]
