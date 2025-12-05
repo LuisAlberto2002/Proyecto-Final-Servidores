@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
-
+from django.shortcuts import render, redirect
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import (
