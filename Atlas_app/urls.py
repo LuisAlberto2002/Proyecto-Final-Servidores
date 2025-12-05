@@ -4,6 +4,7 @@ from .views import (
     ClientsViewSet, CarsViewSet, ServiciosViewSet,
     ServiceOrdersViewSet, FacturesViewSet
 )
+import views
 
 router = routers.DefaultRouter()
 router.register(r'clients', ClientsViewSet)
