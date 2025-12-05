@@ -40,6 +40,7 @@ router.register(r'factures', FacturesViewSet)
 urlpatterns = [
 
     path("api/", include(router.urls)),
+     path("", atlas_views.index,name='index'),
     path("cars/", atlas_views.cars_list, name="cars_list"),
     path("cars/create/", atlas_views.cars_create, name="cars_create"),
     path("cars/<int:pk>/edit/", atlas_views.cars_edit, name="cars_edit"),

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Automotriz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Taller Automotriz "Vulpe"</h1>
+    </header>
+
+    <nav>
+        <a href="file:///C:/Users/vulpe/OneDrive/Escritorio/Tecnologia%20de%20servidores/Entrega%20final%20en%20equipos/frontend/clientes.html">Clientes</a>
+        <a href="{% url 'cars_list' %}">Autos</a>
+        <a href="{% url 'servicios_list' %}">Servicios</a>
+        <a href="{% url 'Buscar_factura' %}">Facturas</a>
+    </nav>
+
+    <main>
+        <h2>Bienvenido al Taller Automotriz</h2>
+        <p>En este sitio podrás consultar información sobre nuestros clientes, autos, servicios realizados y facturas emitidas.</p>
+        <p>Usa el menú de navegación para acceder a cada sección.</p>
+    </main>
+</body>
+</html>

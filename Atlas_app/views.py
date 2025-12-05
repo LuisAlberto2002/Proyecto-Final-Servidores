@@ -17,6 +17,7 @@ from drf_spectacular.utils import (
 )
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 from .forms import FacturesForm, CarsForm
 from .models import Clients, Cars, Servicios, Service_orders, Factures
@@ -187,9 +188,38 @@ def CreateFactura(request):
             sn=sn,
             service_order=orden,
         )
+
+        contenido_email = f"""
+Hola,
+
+Este correo contiene la información de su factura por el servicio solicitado:
+
+Número de factura: {factura.sn}
+Orden de servicio: {factura.service_order.code}
+Monto: ${factura.service_order.servicio.costo:.2f}
+Fecha: {factura.fecha.strftime('%d/%m/%Y')}
+
+Gracias por su preferencia.
+"""
+        
+        try:
+            send_mail(
+                subject=f'✅ Factura de servicio: {factura.service_order.servicio.name}',
+                message=contenido_email,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[factura.service_order.Client.email],
+                fail_silently=False
+            )
+            messages.success(request, '✅ Factura creada y correo enviado exitosamente')
+        except Exception as e:
+            messages.warning(request, f'⚠️ Factura creada, pero no se pudo enviar el correo: {e}')
+
+
+
+
         return redirect('/facturas/')
     return render(request, 'facturas/facturaC.html', {'ordenes': orders})
-    facturas = Factures.objects.create()
+
 
 #Eliminar la factura a partir de su code
 
@@ -444,3 +474,7 @@ def enviar_email(usuario, asunto, contenido):
     except Exception as e:
         print(f"Error al enviar email: {str(e)}")
         return False
+
+
+def index(request):
+    return render(request, "index.html")
