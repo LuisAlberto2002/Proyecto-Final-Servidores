@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework import viewsets, permissions, serializers
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
@@ -9,14 +9,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
-from django.shortcuts import render, redirect
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import (
     extend_schema, extend_schema_view,
     OpenApiParameter, OpenApiResponse
 )
-
 from django.conf import settings
 from django.core.mail import send_mail
 
